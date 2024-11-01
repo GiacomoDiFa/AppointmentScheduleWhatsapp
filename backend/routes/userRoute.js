@@ -83,8 +83,7 @@ router.put('/users/:giorno/:telefono', validateUserFields, async (req, res) => {
 // Eliminare un utente per un giorno specifico tramite il numero di telefono
 router.delete('/users/:giorno/:telefono', async (req, res) => {
   const { giorno, telefono } = req.params;
-  console.log(giorno)
-  console.log(telefono)
+
 
   const usersByDay = await readUsers();
 
