@@ -1,0 +1,37 @@
+{
+  "Lunedi": [
+    {
+      "nome": "Luisa",
+      "cognome": "Bianchi",
+      "telefono": "0987654321",
+      "orario": "14:30"
+    }
+  ],
+  "Martedi": [
+    {
+      "nome": "Marco",
+      "cognome": "Verdi",
+      "telefono": "1122334455",
+      "orario": "09:30"
+    }
+  ],
+  "Mercoledi": [
+    {
+      "nome": "Giulia",
+      "cognome": "Gialli",
+      "telefono": "2233445566",
+      "orario": "16:00"
+    }
+  ],
+  "Giovedi": [],
+  "Venerdi": [
+    {
+      "nome": "Stefano",
+      "cognome": "Neri",
+      "telefono": "3344556677",
+      "orario": "11:15"
+    }
+  ],
+  "Sabato": [],
+  "Domenica": []
+}
