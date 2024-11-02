@@ -2,6 +2,7 @@ import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
 import './App.css';
 import HomePage from './pages/HomePage';
 import DayPage from './pages/DayPage';
+import ContactsPage from './pages/ContactsPage';
 
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
       <Routes>
         <Route path='/' element={<HomePage/>}></Route>
         <Route path='/day/:giorno' element={<DayPage/>}></Route>
+        <Route path='/contacts' element={<ContactsPage/>}></Route>
       </Routes>
       </BrowserRouter>
      
