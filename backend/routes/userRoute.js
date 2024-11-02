@@ -16,11 +16,11 @@ async function writeUsers(usersByDay) {
 
 // Middleware per validare i campi dell'utente
 function validateUserFields(req, res, next) {
-    const { nome, cognome, telefono, data, orario } = req.body;
+    const { nome, cognome, numero, data, orario } = req.body;
     const { giorno } = req.params;
 
-    if (!nome || !cognome || !telefono || !data ||!orario) {
-      return res.status(400).json({ error: 'Tutti i campi (nome, cognome, telefono, data, orario) sono obbligatori.' });
+    if (!nome || !cognome || !numero || !data ||!orario) {
+      return res.status(400).json({ error: 'Tutti i campi (nome, cognome, numero, data, orario) sono obbligatori.' });
     }
     if (!giorno || !["Lunedi", "Martedi", "Mercoledi", "Giovedi", "Venerdi", "Sabato", "Domenica"].includes(giorno)) {
       return res.status(400).json({ error: 'Il giorno della settimana è obbligatorio e deve essere valido.' });
@@ -35,7 +35,7 @@ router.get('/users/:giorno', async (req, res) => {
   res.json(usersByDay[giorno] || []);
 });
 
-// Aggiungere un nuovo utente per un giorno specifico usando il numero di telefono come chiave
+// Aggiungere un nuovo utente per un giorno specifico usando il numero di numero come chiave
 router.post('/users/:giorno', validateUserFields, async (req, res) => {
   const { giorno } = req.params;
   const newUser = req.body;
@@ -52,9 +52,9 @@ router.post('/users/:giorno', validateUserFields, async (req, res) => {
   res.status(201).json(newUser);
 });
 
-// Modificare un utente per un giorno specifico tramite il numero di telefono
-//router.put('/users/:giorno/:telefono', validateUserFields, async (req, res) => {
-  //const { giorno, telefono } = req.params;
+// Modificare un utente per un giorno specifico tramite il numero di numero
+//router.put('/users/:giorno/:numero', validateUserFields, async (req, res) => {
+  //const { giorno, numero } = req.params;
   //const updateData = req.body;
   //const usersByDay = await readUsers();
 
@@ -62,7 +62,7 @@ router.post('/users/:giorno', validateUserFields, async (req, res) => {
     //return res.status(404).json({ error: 'Nessun utente trovato per questo giorno' });
   //}
 
-  //const userIndex = usersByDay[giorno].findIndex(user => user.telefono === telefono);
+  //const userIndex = usersByDay[giorno].findIndex(user => user.numero === numero);
   //if (userIndex === -1) {
     //return res.status(404).json({ error: 'Utente non trovato' });
   //}
@@ -73,7 +73,7 @@ router.post('/users/:giorno', validateUserFields, async (req, res) => {
   //res.json(usersByDay[giorno][userIndex]);
 //});
 
-// Eliminare un utente per un giorno specifico tramite il numero di telefono
+// Eliminare un utente per un giorno specifico tramite il numero di numero
 router.delete('/users/:giorno/:nome/:cognome/:data/:orario', async (req, res) => {
   const { giorno, nome, cognome, data, orario } = req.params;
 

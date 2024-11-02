@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Schedule from '../components/Schedule';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -9,48 +9,68 @@ function DayPage() {
     const [newUser, setNewUser] = useState({
         data: '',
         orario: '',
-        telefono: '',
+        numero: '',
         nome: '',
         cognome: '',
     });
+    const [usersList, setUsersList] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5000/api/contact/contact/`);
+                setUsersList(response.data);
+            } catch (error) {
+                console.error("Errore durante il recupero dei dati:", error);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setNewUser((prev) => ({ ...prev, [name]: value }));
     };
 
+    const handleUserSelect = (e) => {
+        const selectedUser = usersList.find(user => user.numero === e.target.value);
+        if (selectedUser) {
+            setNewUser({
+                ...newUser,
+                numero: selectedUser.numero,
+                nome: selectedUser.nome,
+                cognome: selectedUser.cognome,
+            });
+        }
+    };
+
     const sendMessagesDay = async () => {
         try {
             const response = await axios.get(`http://localhost:5000/api/whatsapp/send-messages/${giorno}`);
             if (response.status === 404) {
-                window.alert("Si e' verificato un'errore nell' invio dei messaggi")
+                window.alert("Si è verificato un errore nell'invio dei messaggi");
             }
         } catch (error) {
-            window.alert("Si e' verificato un'errore nell' invio dei messaggi")
+            window.alert("Si è verificato un errore nell'invio dei messaggi");
         }
-    }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Qui puoi gestire l'inserimento dell'utente per il giorno specifico
         try {
-            const response = await axios.post(`http://localhost:5000/api/user/users/${giorno}`, {
-                ...newUser
-            });
+            const response = await axios.post(`http://localhost:5000/api/user/users/${giorno}`, newUser);
             if (response.status === 201) {
-                window.location.reload()
-            }
-            if (response.status === 400) {
-                window.alert("Errore nell'inserimento dell'utente")
+                window.location.reload();
+            } else if (response.status === 400) {
+                window.alert("Errore nell'inserimento dell'utente");
             }
         } catch (error) {
             console.error('Errore durante l\'aggiunta dell\'utente:', error);
-            window.alert('Si è verificato un errore. Verifica i dati inseriti.'); // M
+            window.alert('Si è verificato un errore. Verifica i dati inseriti.');
         }
-        console.log('Nuovo utente:', newUser);
-        // Aggiungi la logica per inserire l'utente nel giorno specifico
-        setIsFormOpen(false); // Chiudi il form dopo l'invio
-        setNewUser({ data: '', orario: '', telefono: '', nome: '', cognome: '' }); // Reset del form
+        setIsFormOpen(false);
+        setNewUser({ data: '', orario: '', numero: '', nome: '', cognome: '' });
     };
 
     return (
@@ -59,7 +79,7 @@ function DayPage() {
             <Schedule />
             <div className='fixed bottom-4 right-4 flex'>
                 <div
-                    className='rounded-full w-20 h-20 bg-blue-600 flex justify-center items-center text-white cursor-pointer text-3xl  hover:bg-blue-700 transition-transform transform hover:scale-105'
+                    className='rounded-full w-20 h-20 bg-blue-600 flex justify-center items-center text-white cursor-pointer text-3xl hover:bg-blue-700 transition-transform transform hover:scale-105'
                     onClick={() => setIsFormOpen(true)}
                 >
                     +
@@ -67,7 +87,7 @@ function DayPage() {
             </div>
             <div className='fixed bottom-4 right-28 flex'>
                 <div
-                    className='rounded-full w-20 h-20 bg-blue-600 flex justify-center items-center text-white cursor-pointer text-3xl  hover:bg-blue-700 transition-transform transform hover:scale-105'
+                    className='rounded-full w-20 h-20 bg-blue-600 flex justify-center items-center text-white cursor-pointer text-3xl hover:bg-blue-700 transition-transform transform hover:scale-105'
                     onClick={() => sendMessagesDay()}
                 >
                     &gt;
@@ -99,33 +119,19 @@ function DayPage() {
                             className='border p-2 mb-2 w-full'
                             placeholder='Orario'
                         />
-                        <input
-                            type='text'
-                            name='telefono'
-                            value={newUser.telefono}
-                            onChange={handleInputChange}
+                        <select
+                            value={newUser.numero}
+                            onChange={handleUserSelect}
                             required
                             className='border p-2 mb-2 w-full'
-                            placeholder='Numero di telefono'
-                        />
-                        <input
-                            type='text'
-                            name='nome'
-                            value={newUser.nome}
-                            onChange={handleInputChange}
-                            required
-                            className='border p-2 mb-2 w-full'
-                            placeholder='Nome'
-                        />
-                        <input
-                            type='text'
-                            name='cognome'
-                            value={newUser.cognome}
-                            onChange={handleInputChange}
-                            required
-                            className='border p-2 mb-2 w-full'
-                            placeholder='Cognome'
-                        />
+                        >
+                            <option value="">Seleziona un contatto</option>
+                            {usersList.map((user) => (
+                                <option key={user.numero} value={user.numero}>
+                                    {user.nome} {user.cognome} - {user.numero}
+                                </option>
+                            ))}
+                        </select>
                         <div className='flex justify-end'>
                             <button
                                 type='submit'
