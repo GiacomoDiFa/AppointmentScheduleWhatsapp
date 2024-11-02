@@ -25,9 +25,11 @@ client.initialize();
 /* Routes */
 const userRoute = require('../backend/routes/userRoute')
 const whatsappRoute = require('../backend/routes/whatsappRoute')
+const contactRoute = require('../backend/routes/contactRoute')
 
 /* Use of the Routes */
 app.use('/api/user', userRoute)
+app.use('/api/contact', contactRoute)
 // Passa il client a whatsappRoute
 app.use('/api/whatsapp', whatsappRoute(client));
 
