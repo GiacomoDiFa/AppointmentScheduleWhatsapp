@@ -16,11 +16,11 @@ async function writeUsers(usersByDay) {
 
 // Middleware per validare i campi dell'utente
 function validateUserFields(req, res, next) {
-    const { nome, cognome, telefono, orario } = req.body;
+    const { nome, cognome, telefono, data, orario } = req.body;
     const { giorno } = req.params;
 
-    if (!nome || !cognome || !telefono || !orario) {
-      return res.status(400).json({ error: 'Tutti i campi (nome, cognome, telefono, orario) sono obbligatori.' });
+    if (!nome || !cognome || !telefono || !data ||!orario) {
+      return res.status(400).json({ error: 'Tutti i campi (nome, cognome, telefono, data, orario) sono obbligatori.' });
     }
     if (!giorno || !["Lunedi", "Martedi", "Mercoledi", "Giovedi", "Venerdi", "Sabato", "Domenica"].includes(giorno)) {
       return res.status(400).json({ error: 'Il giorno della settimana è obbligatorio e deve essere valido.' });
@@ -45,13 +45,6 @@ router.post('/users/:giorno', validateUserFields, async (req, res) => {
     usersByDay[giorno] = [];
   }
 
-  // Controllo se l'utente con quel numero di telefono già esiste nel giorno specifico
-  const existingUser = usersByDay[giorno].find(user => user.telefono === newUser.telefono);
-
-  if (existingUser) {
-    return res.status(400).json({ error: 'Utente con questo numero di telefono già esiste per questo giorno' });
-  }
-
   // Aggiungi l'utente al giorno specificato
   usersByDay[giorno].push(newUser);
   await writeUsers(usersByDay);
@@ -60,30 +53,29 @@ router.post('/users/:giorno', validateUserFields, async (req, res) => {
 });
 
 // Modificare un utente per un giorno specifico tramite il numero di telefono
-router.put('/users/:giorno/:telefono', validateUserFields, async (req, res) => {
-  const { giorno, telefono } = req.params;
-  const updateData = req.body;
-  const usersByDay = await readUsers();
+//router.put('/users/:giorno/:telefono', validateUserFields, async (req, res) => {
+  //const { giorno, telefono } = req.params;
+  //const updateData = req.body;
+  //const usersByDay = await readUsers();
 
-  if (!usersByDay[giorno]) {
-    return res.status(404).json({ error: 'Nessun utente trovato per questo giorno' });
-  }
+  //if (!usersByDay[giorno]) {
+    //return res.status(404).json({ error: 'Nessun utente trovato per questo giorno' });
+  //}
 
-  const userIndex = usersByDay[giorno].findIndex(user => user.telefono === telefono);
-  if (userIndex === -1) {
-    return res.status(404).json({ error: 'Utente non trovato' });
-  }
+  //const userIndex = usersByDay[giorno].findIndex(user => user.telefono === telefono);
+  //if (userIndex === -1) {
+    //return res.status(404).json({ error: 'Utente non trovato' });
+  //}
 
-  usersByDay[giorno][userIndex] = { ...usersByDay[giorno][userIndex], ...updateData };
-  await writeUsers(usersByDay);
+  //usersByDay[giorno][userIndex] = { ...usersByDay[giorno][userIndex], ...updateData };
+  //await writeUsers(usersByDay);
 
-  res.json(usersByDay[giorno][userIndex]);
-});
+  //res.json(usersByDay[giorno][userIndex]);
+//});
 
 // Eliminare un utente per un giorno specifico tramite il numero di telefono
-router.delete('/users/:giorno/:telefono', async (req, res) => {
-  const { giorno, telefono } = req.params;
-
+router.delete('/users/:giorno/:nome/:cognome/:data/:orario', async (req, res) => {
+  const { giorno, nome, cognome, data, orario } = req.params;
 
   const usersByDay = await readUsers();
 
@@ -91,16 +83,30 @@ router.delete('/users/:giorno/:telefono', async (req, res) => {
     return res.status(404).json({ error: 'Nessun utente trovato per questo giorno' });
   }
 
-  const userExists = usersByDay[giorno].some(user => user.telefono === telefono);
-  console.log(userExists)
+  // Trova l'utente che rispetta tutti i parametri
+  const userExists = usersByDay[giorno].some(
+    user => user.nome === nome && 
+            user.cognome === cognome && 
+            user.data === data && 
+            user.orario === orario
+  );
+
   if (!userExists) {
     return res.status(404).json({ error: 'Utente non trovato' });
   }
 
-  usersByDay[giorno] = usersByDay[giorno].filter(user => user.telefono !== telefono);
+  // Elimina l'utente che rispetta tutti i parametri
+  usersByDay[giorno] = usersByDay[giorno].filter(
+    user => !(user.nome === nome && 
+              user.cognome === cognome && 
+              user.data === data && 
+              user.orario === orario)
+  );
+
   await writeUsers(usersByDay);
 
   res.status(204).send();
 });
+
 
 module.exports = router;

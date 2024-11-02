@@ -7,6 +7,7 @@ function DayPage() {
     const { giorno } = useParams();
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [newUser, setNewUser] = useState({
+        data: '',
         orario: '',
         telefono: '',
         nome: '',
@@ -18,27 +19,38 @@ function DayPage() {
         setNewUser((prev) => ({ ...prev, [name]: value }));
     };
 
+    const sendMessagesDay = async () => {
+        try {
+            const response = await axios.get(`http://localhost:5000/api/whatsapp/send-messages/${giorno}`);
+            if (response.status === 404) {
+                window.alert("Si e' verificato un'errore nell' invio dei messaggi")
+            }
+        } catch (error) {
+            window.alert("Si e' verificato un'errore nell' invio dei messaggi")
+        }
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         // Qui puoi gestire l'inserimento dell'utente per il giorno specifico
-        try{
+        try {
             const response = await axios.post(`http://localhost:5000/api/user/users/${giorno}`, {
                 ...newUser
-                });
-            if(response.status === 201){
+            });
+            if (response.status === 201) {
                 window.location.reload()
             }
-            if(response.status === 400){
+            if (response.status === 400) {
                 window.alert("Errore nell'inserimento dell'utente")
             }
-        }catch(error){
+        } catch (error) {
             console.error('Errore durante l\'aggiunta dell\'utente:', error);
             window.alert('Si è verificato un errore. Verifica i dati inseriti.'); // M
         }
         console.log('Nuovo utente:', newUser);
         // Aggiungi la logica per inserire l'utente nel giorno specifico
         setIsFormOpen(false); // Chiudi il form dopo l'invio
-        setNewUser({ orario: '', telefono: '', nome: '', cognome: '' }); // Reset del form
+        setNewUser({ data: '', orario: '', telefono: '', nome: '', cognome: '' }); // Reset del form
     };
 
     return (
@@ -56,7 +68,7 @@ function DayPage() {
             <div className='fixed bottom-4 right-28 flex'>
                 <div
                     className='rounded-full w-20 h-20 bg-blue-600 flex justify-center items-center text-white cursor-pointer text-3xl  hover:bg-blue-700 transition-transform transform hover:scale-105'
-                    onClick={() => setIsFormOpen(true)}
+                    onClick={() => sendMessagesDay()}
                 >
                     &gt;
                 </div>
@@ -64,11 +76,20 @@ function DayPage() {
 
             {isFormOpen && (
                 <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
-                    <form 
-                        onSubmit={handleSubmit} 
+                    <form
+                        onSubmit={handleSubmit}
                         className='bg-white p-5 rounded shadow-md w-80'
                     >
                         <h2 className='text-lg font-bold mb-4'>Aggiungi Utente</h2>
+                        <input
+                            type='text'
+                            name='data'
+                            value={newUser.data}
+                            onChange={handleInputChange}
+                            required
+                            className='border p-2 mb-2 w-full'
+                            placeholder='Data'
+                        />
                         <input
                             type='text'
                             name='orario'
@@ -106,15 +127,15 @@ function DayPage() {
                             placeholder='Cognome'
                         />
                         <div className='flex justify-end'>
-                            <button 
-                                type='submit' 
+                            <button
+                                type='submit'
                                 className='bg-blue-600 text-white p-2 rounded mr-2'
                             >
                                 Aggiungi
                             </button>
-                            <button 
-                                type='button' 
-                                onClick={() => setIsFormOpen(false)} 
+                            <button
+                                type='button'
+                                onClick={() => setIsFormOpen(false)}
                                 className='bg-red-600 text-white p-2 rounded'
                             >
                                 Annulla
