@@ -1,5 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import {  GoPerson } from 'react-icons/go';
+import {  CiTrash } from 'react-icons/ci';
+import { BsTelephone } from "react-icons/bs";
 
 function ContactsPage() {
     const [isFormOpen, setIsFormOpen] = useState(false);
@@ -9,95 +12,104 @@ function ContactsPage() {
         numero: ''
     });
     const [usersList, setUsersList] = useState([]);
-
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setNewUser((prev) => ({ ...prev, [name]: value }));
     };
 
-    
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Qui puoi gestire l'inserimento dell'utente per il giorno specifico
         try {
             const response = await axios.post(`http://localhost:5000/api/contact/contact/`, {
                 ...newUser
             });
             if (response.status === 201) {
-                window.location.reload()
-            }
-            if (response.status === 400) {
-                window.alert("Errore nell'inserimento dell'utente")
+                window.location.reload();
+            } else if (response.status === 400) {
+                window.alert("Errore nell'inserimento dell'utente");
             }
         } catch (error) {
             console.error('Errore durante l\'aggiunta dell\'utente:', error);
-            window.alert('Si è verificato un errore. Verifica i dati inseriti.'); // M
+            window.alert('Si è verificato un errore. Verifica i dati inseriti.');
         }
-        console.log('Nuovo utente:', newUser);
-        // Aggiungi la logica per inserire l'utente nel giorno specifico
-        setIsFormOpen(false); // Chiudi il form dopo l'invio
-        setNewUser({ nome: '', cognome: '' , numero: ''}); // Reset del form
+        setIsFormOpen(false);
+        setNewUser({ nome: '', cognome: '', numero: '' });
     };
 
-
     useEffect(() => {
-        // Funzione per fare la richiesta GET
         const fetchData = async () => {
             try {
+                setIsLoading(true);
                 const response = await axios.get(`http://localhost:5000/api/contact/contact/`);
-                setUsersList(response.data); // Salva i dati di risposta nello stato
+                setUsersList(response.data);
             } catch (error) {
                 console.error("Errore durante il recupero dei dati:", error);
+            } finally {
+                setIsLoading(false);
             }
         };
 
         fetchData();
     }, []);
 
-    async function handleDeleteuser(user) {
+    const handleDeleteUser = async (user) => {
         try {
+            setIsLoading(true);
             const response = await axios.delete(`http://localhost:5000/api/contact/contact/${user.numero}`);
             if (response.status === 204) {
-                window.location.reload()
+                window.location.reload();
             }
-
         } catch (error) {
             console.error("Errore durante l'eliminazione dell'utente:", error);
+        } finally {
+            setIsLoading(false);
         }
-    }
+    };
 
-
-  return (
+    return (
         <div className='relative min-h-screen pb-16'>
-           <h1 className='text-center font-bold text-3xl'>I miei contatti</h1>
-           {usersList.map(user => (
-                    <div key={user.numero} className="flex items-center justify-center p-2 border-b border-gray-200">
-                        <div className='text-gray-600 font-semibold'>
-                            {user.numero}
+            <h1 className='text-center font-bold text-3xl'>I miei contatti</h1>
+
+            {isLoading ? (
+                <p>Caricamento...</p>
+            ) : (
+                <div>
+                   {usersList.map(user => (
+                    <div key={user.numero} className='flex w-full items-center border-b border-gray-200'>
+                        <div className=''>
+                            <div className='flex items-center gap-x-2 ml-4'>
+                                <div>
+                                    <GoPerson size={20} />
+                                </div>
+                                <div className='text-gray-800 font-medium text-lg'>
+                                    {user.nome} {user.cognome}
+                                </div>
+                            </div>
+                            <div className='flex items-center gap-x-2 ml-4 text-gray-500'>
+                                <div><BsTelephone size={20} /></div>
+                                <div>{user.numero}</div>
+                            </div>
                         </div>
 
-
-                        <div className="text-center flex-1 text-gray-800 font-medium">
-                            {user.nome} {user.cognome}
-                        </div>
-                        <div className="flex gap-2 text-gray-500">
-                            <button className="hover:text-red-500" onClick={() => handleDeleteuser(user)}>
-                                🗑️
-                            </button>
+                        <div className='flex  ml-auto mr-4'>
+                            <div onClick={() => handleDeleteUser(user)} className='cursor-pointer'><CiTrash color='red' size={30} /></div>
                         </div>
                     </div>
                 ))}
 
+                </div>
+            )}
+
             <div className='fixed bottom-4 right-4 flex'>
                 <div
-                    className='rounded-full w-20 h-20 bg-blue-600 flex justify-center items-center text-white cursor-pointer text-3xl  hover:bg-blue-700 transition-transform transform hover:scale-105'
+                    className='rounded-full w-20 h-20 bg-blue-600 flex justify-center items-center text-white cursor-pointer text-3xl hover:bg-blue-700 transition-transform transform hover:scale-105'
                     onClick={() => setIsFormOpen(true)}
                 >
                     +
                 </div>
             </div>
-            
 
             {isFormOpen && (
                 <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
@@ -155,4 +167,4 @@ function ContactsPage() {
     );
 }
 
-export default ContactsPage
+export default ContactsPage;

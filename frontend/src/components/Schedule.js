@@ -1,6 +1,9 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import {  GoPerson } from "react-icons/go";
+import { CiClock1, CiTrash } from 'react-icons/ci';
+import { FaCalendarDay } from "react-icons/fa";
 
 function Schedule() {
     const { giorno } = useParams();
@@ -35,22 +38,28 @@ function Schedule() {
     return (
         <>
             {usersList
-                .sort((a, b) => a.orario.localeCompare(b.orario)) // Ordina per orario come stringhe
+                .sort((a, b) => a.data.localeCompare(b.data)) // Ordina per orario come stringhe
                 .map(user => (
-                    <div key={user.telefono} className="flex items-center justify-center p-2 border-b border-gray-200">
-                        <div className='text-gray-600 font-semibold'>
-                            {user.data}
+                    <div key={user.numero} className='flex w-full items-center border-b border-gray-200'>
+                        <div className=''>
+                            <div className='flex items-center gap-x-2 ml-4'>
+                                <div>
+                                    <GoPerson size={20} />
+                                </div>
+                                <div className='text-gray-800 font-medium text-lg'>
+                                    {user.nome} {user.cognome}
+                                </div>
+                            </div>
+                            <div className='flex items-center ml-4 text-gray-500'>
+                                <div className='mr-2'><FaCalendarDay size={20} /></div>
+                                <div className='mr-2'>{user.data}</div>
+                                <div className='mr-1'><CiClock1 size={20} /></div>
+                                <div>{user.orario}</div>
+                            </div>
                         </div>
-                        <div className="text-gray-600 font-semibold ml-2">
-                            {user.orario}
-                        </div>
-                        <div className="text-center flex-1 text-gray-800 font-medium">
-                            {user.nome} {user.cognome}
-                        </div>
-                        <div className="flex gap-2 text-gray-500">
-                            <button className="hover:text-red-500" onClick={() => handleDeleteuser(user)}>
-                                🗑️
-                            </button>
+
+                        <div className='flex  ml-auto mr-4'>
+                            <div onClick={() => handleDeleteuser(user)} className='cursor-pointer'><CiTrash color='red' size={30} /></div>
                         </div>
                     </div>
                 ))}
