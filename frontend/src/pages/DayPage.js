@@ -3,6 +3,8 @@ import Schedule from '../components/Schedule';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { LuSendHorizonal } from "react-icons/lu";
+import swal from 'sweetalert';
+
 
 function DayPage() {
     const { giorno } = useParams();
@@ -49,11 +51,14 @@ function DayPage() {
     const sendMessagesDay = async () => {
         try {
             const response = await axios.get(`http://localhost:5000/api/whatsapp/send-messages/${giorno}`);
+            if (response.status === 200) {
+                swal("Ottimo!", `I messaggi di ${giorno} sono stati inviati con successo!`, "success");
+            }
             if (response.status === 404) {
-                window.alert("Si è verificato un errore nell'invio dei messaggi");
+                swal("Oops!", "Qualcosa è andato storto!", "error");
             }
         } catch (error) {
-            window.alert("Si è verificato un errore nell'invio dei messaggi");
+            swal("Oops!", "Qualcosa è andato storto!", "error");
         }
     };
 

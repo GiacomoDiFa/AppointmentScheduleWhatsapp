@@ -39,6 +39,7 @@ module.exports = function(client) {
                 return res.status(404).json({error: "Errore nell'invio dei messaggi"})
             }
         }
+        res.status(200).send()
     });
 
     return router;
