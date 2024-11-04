@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import {  GoPerson } from 'react-icons/go';
-import {  CiTrash } from 'react-icons/ci';
+import { GoPerson } from 'react-icons/go';
+import { CiTrash } from 'react-icons/ci';
 import { BsTelephone } from "react-icons/bs";
 
 function ContactsPage() {
@@ -76,28 +76,28 @@ function ContactsPage() {
                 <p>Caricamento...</p>
             ) : (
                 <div>
-                   {usersList.map(user => (
-                    <div key={user.numero} className='flex w-full items-center border-b border-gray-200 mt-1'>
-                        <div className=''>
-                            <div className='flex items-center gap-x-2 ml-4'>
-                                <div>
-                                    <GoPerson size={20} />
+                    {usersList.map(user => (
+                        <div key={user.numero} className='flex w-full items-center border-b border-gray-200 mt-1'>
+                            <div className=''>
+                                <div className='flex items-center gap-x-2 ml-4'>
+                                    <div>
+                                        <GoPerson size={20} />
+                                    </div>
+                                    <div className='text-gray-800 font-medium text-lg'>
+                                        {user.nome} {user.cognome}
+                                    </div>
                                 </div>
-                                <div className='text-gray-800 font-medium text-lg'>
-                                    {user.nome} {user.cognome}
+                                <div className='flex items-center gap-x-2 ml-4 text-gray-500'>
+                                    <div><BsTelephone size={20} /></div>
+                                    <div>{user.numero}</div>
                                 </div>
                             </div>
-                            <div className='flex items-center gap-x-2 ml-4 text-gray-500'>
-                                <div><BsTelephone size={20} /></div>
-                                <div>{user.numero}</div>
-                            </div>
-                        </div>
 
-                        <div className='flex  ml-auto mr-4'>
-                            <div onClick={() => handleDeleteUser(user)} className='cursor-pointer'><CiTrash color='red' size={30} /></div>
+                            <div className='flex  ml-auto mr-4'>
+                                <div onClick={() => handleDeleteUser(user)} className='cursor-pointer'><CiTrash color='red' size={30} /></div>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
 
                 </div>
             )}
@@ -113,57 +113,53 @@ function ContactsPage() {
 
             {isFormOpen && (
                 <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
-                    <form
-                        onSubmit={handleSubmit}
-                        className='bg-white p-5 rounded shadow-md w-80'
-                    >
-                        <h2 className='text-lg font-bold mb-4'>Aggiungi Contatto</h2>
-                        <input
-                            type='text'
-                            name='nome'
-                            value={newUser.nome}
-                            onChange={handleInputChange}
-                            required
-                            className='border p-2 mb-2 w-full'
-                            placeholder='Nome'
-                        />
-                        <input
-                            type='text'
-                            name='cognome'
-                            value={newUser.cognome}
-                            onChange={handleInputChange}
-                            required
-                            className='border p-2 mb-2 w-full'
-                            placeholder='Cognome'
-                        />
-                        <input
-                            type='text'
-                            name='numero'
-                            value={newUser.numero}
-                            onChange={handleInputChange}
-                            required
-                            className='border p-2 mb-2 w-full'
-                            placeholder='Numero di telefono'
-                        />
-                        <div className='flex justify-end'>
-                            <button
-                                type='submit'
-                                className='bg-blue-600 text-white p-2 rounded mr-2'
-                            >
-                                Aggiungi
-                            </button>
-                            <button
-                                type='button'
-                                onClick={() => setIsFormOpen(false)}
-                                className='bg-red-600 text-white p-2 rounded'
-                            >
-                                Annulla
-                            </button>
+                    <form class="w-full max-w-lg bg-white p-5 rounded shadow-md" onSubmit={handleSubmit}>
+                        <h1 className='font-bold mb-5 text-lg'>Aggiungi Contatto</h1>
+                        <div class="flex flex-wrap -mx-3 mb-6">
+                            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
+                                    Nome
+                                </label>
+                                <input  value={newUser.nome} name='nome'
+                                onChange={handleInputChange} required class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" type="text" placeholder="Jane" />
+                            </div>
+                            <div class="w-full md:w-1/2 px-3">
+                                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-last-name">
+                                    Cognome
+                                </label>
+                                <input  value={newUser.cognome} name='cognome'
+                                onChange={handleInputChange} required class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" type="text" placeholder="Doe" />
+                            </div>
                         </div>
+                        <div class="flex flex-wrap -mx-3 mb-6">
+                            <div class="w-full px-3">
+                                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-password">
+                                    Numero
+                                </label>
+                                <input value={newUser.numero} name='numero'
+                                onChange={handleInputChange} required class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"  type="text" placeholder="3333333333" />
+                            </div>
+                        </div>
+                        <div className='flex justify-end'>
+                                <button
+                                    type='submit'
+                                    className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mr-2 rounded focus:outline-none focus:shadow-outline'
+                                >
+                                    Aggiungi
+                                </button>
+                                <button
+                                    type='button'
+                                    onClick={() => setIsFormOpen(false)}
+                                    className='bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'
+                                >
+                                    Annulla
+                                </button>
+                            </div>
                     </form>
-                </div>
+                    </div>
             )}
         </div>
+
     );
 }
 
