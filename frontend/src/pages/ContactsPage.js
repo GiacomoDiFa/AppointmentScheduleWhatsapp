@@ -77,7 +77,7 @@ function ContactsPage() {
             ) : (
                 <div>
                    {usersList.map(user => (
-                    <div key={user.numero} className='flex w-full items-center border-b border-gray-200'>
+                    <div key={user.numero} className='flex w-full items-center border-b border-gray-200 mt-1'>
                         <div className=''>
                             <div className='flex items-center gap-x-2 ml-4'>
                                 <div>
