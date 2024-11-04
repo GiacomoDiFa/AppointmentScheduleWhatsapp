@@ -96,30 +96,25 @@ function DayPage() {
             </div>
 
             {isFormOpen && (
-                <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
-                    <form
-                        onSubmit={handleSubmit}
-                        className='bg-white p-5 rounded shadow-md w-80'
-                    >
-                        <h2 className='text-lg font-bold mb-4'>Aggiungi Utente</h2>
-                        <input
-                            type='text'
-                            name='data'
-                            value={newUser.data}
-                            onChange={handleInputChange}
-                            required
-                            className='border p-2 mb-2 w-full'
-                            placeholder='Data'
-                        />
-                        <input
-                            type='text'
-                            name='orario'
-                            value={newUser.orario}
-                            onChange={handleInputChange}
-                            required
-                            className='border p-2 mb-2 w-full'
-                            placeholder='Orario'
-                        />
+                <><div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
+                    <form class="w-full max-w-lg bg-white p-5 rounded shadow-md" onSubmit={handleSubmit}>
+                        <h1 className='font-bold mb-8 text-lg uppercase tracking-wide'>Aggiungi Utente</h1>
+                        <div class="flex flex-wrap -mx-3 mb-6">
+                            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
+                                    Data
+                                </label>
+                                <input value={newUser.data} name='data'
+                                    onChange={handleInputChange} required class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" type="text" placeholder="03-11-2024" />
+                            </div>
+                            <div class="w-full md:w-1/2 px-3">
+                                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-last-name">
+                                    Orario
+                                </label>
+                                <input value={newUser.orario} name='orario'
+                                    onChange={handleInputChange} required class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" type="text" placeholder="11:00" />
+                            </div>
+                        </div>
                         <select
                             value={newUser.numero}
                             onChange={handleUserSelect}
@@ -133,23 +128,25 @@ function DayPage() {
                                 </option>
                             ))}
                         </select>
-                        <div className='flex justify-end'>
+
+                        <div className='flex justify-end mt-4'>
                             <button
                                 type='submit'
-                                className='bg-blue-600 text-white p-2 rounded mr-2'
+                                className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mr-2 rounded focus:outline-none focus:shadow-outline'
                             >
                                 Aggiungi
                             </button>
                             <button
                                 type='button'
                                 onClick={() => setIsFormOpen(false)}
-                                className='bg-red-600 text-white p-2 rounded'
+                                className='bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'
                             >
                                 Annulla
                             </button>
                         </div>
                     </form>
                 </div>
+                </>
             )}
         </div>
     );

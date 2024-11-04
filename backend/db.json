@@ -1,22 +1,8 @@
 {
   "Lunedi": [
     {
-      "data": "03-11-2024",
-      "orario": "10:00",
-      "numero": "3892530814",
-      "nome": "Giacomo",
-      "cognome": "Di Fabrizio"
-    },
-    {
-      "data": "04-11-2024",
-      "orario": "11:00",
-      "numero": "3337824905",
-      "nome": "Giorgia",
-      "cognome": "Traversi"
-    },
-    {
       "data": "02-11-2024",
-      "orario": "15:00",
+      "orario": "10:00",
       "numero": "3892530814",
       "nome": "Giacomo",
       "cognome": "Di Fabrizio"
