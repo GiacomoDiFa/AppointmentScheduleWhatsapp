@@ -6,6 +6,13 @@
       "numero": "3337824905",
       "nome": "Giorgia",
       "cognome": "Traversi"
+    },
+    {
+      "data": "18-11-2024",
+      "orario": "13:15",
+      "numero": "3892530814",
+      "nome": "Giacomo",
+      "cognome": "Di Fabrizio"
     }
   ],
   "Martedi": [
@@ -17,5 +24,13 @@
       "cognome": "Di Fabrizio"
     }
   ],
-  "Domenica": []
+  "Domenica": [
+    {
+      "data": "24-11-2024",
+      "orario": "12:00",
+      "numero": "3892530814",
+      "nome": "Giacomo",
+      "cognome": "Di Fabrizio"
+    }
+  ]
 }
