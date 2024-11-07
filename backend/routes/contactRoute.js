@@ -54,6 +54,52 @@ router.post('/contact', validateUserFields, async (req, res) => {
     res.status(201).json(newUser);
 });
 
+// Funzione per processare e salvare i contatti
+router.post('/contacts-whatsapp', async (req, res) => {
+    const contacts = req.body; // L'array di oggetti inviato nel corpo della richiesta
+    const savedContacts = [];
+    
+
+    // Processa ogni contatto
+    for (const contact of contacts.selectedContacts) {
+        const nameParts = contact.name.split(' '); // Dividi il campo name in nome e cognome
+        const nome = nameParts[0]; // Prendi il primo elemento come nome
+        const cognome = nameParts[1] || ''; // Se c'è un secondo elemento, è il cognome (se non esiste, sarà una stringa vuota)
+
+        // Crea un oggetto contatto
+        const newContact = {
+            nome,
+            cognome,
+            numero: contact.number
+        };
+
+        // Aggiungi il nuovo contatto alla lista
+        savedContacts.push(newContact);
+    }
+
+
+    // Recupera i contatti esistenti dal file
+    let existingContacts = await readContacts();
+
+    // Assicurati che `contacts` sia un array
+    if (!Array.isArray(existingContacts)) {
+        existingContacts = [];
+    }
+
+    // Aggiungi i nuovi contatti all'elenco esistente
+    existingContacts = existingContacts.concat(savedContacts);
+    
+
+    // Salva l'array aggiornato nel file
+    await writeContacts(existingContacts);
+
+    // Rispondi con i contatti salvati
+    res.status(201).json({
+        message: 'Contatti salvati con successo!',
+        savedContacts
+    });
+});
+
 
 
 
