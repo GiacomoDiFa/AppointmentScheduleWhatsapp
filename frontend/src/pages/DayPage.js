@@ -8,8 +8,10 @@ import swal from 'sweetalert';
 function DayPage() {
     const { giorno, data } = useParams();
     const [isFormOpen, setIsFormOpen] = useState(false);
+    const [showQrCode, setShowQrCode] = useState(false);
+    const [qrCodeUrl, setQrCodeUrl] = useState('');
     const [newUser, setNewUser] = useState({
-        data: data || '',  // Pre-riempie il campo data con il valore della data nel link
+        data: data || '',  
         orario: '',
         numero: '',
         nome: '',
@@ -44,6 +46,30 @@ function DayPage() {
                 nome: selectedUser.nome,
                 cognome: selectedUser.cognome,
             });
+        }
+    };
+
+    const checkClientStatusAndSendMessages = async () => {
+        try {
+            const statusResponse = await axios.get('http://localhost:5000/client-status');
+            if (statusResponse.data.ready) {
+                await sendMessagesDay();
+            } else {
+                fetchQrCode();
+            }
+        } catch (error) {
+            swal("Oops!", "Qualcosa è andato storto!", "error");
+        }
+    };
+
+    const fetchQrCode = async () => {
+        try {
+            const qrResponse = await axios.get('http://localhost:5000/qr');
+            setQrCodeUrl(qrResponse.data);
+            console.log(qrCodeUrl)
+            setShowQrCode(true);
+        } catch (error) {
+            console.error("Errore durante il recupero del QR code:", error);
         }
     };
 
@@ -92,11 +118,26 @@ function DayPage() {
             <div className='fixed bottom-4 right-28 flex'>
                 <div
                     className='rounded-full w-20 h-20 bg-blue-600 flex justify-center items-center text-white cursor-pointer text-3xl hover:bg-blue-700 transition-transform transform hover:scale-105'
-                    onClick={() => sendMessagesDay()}
+                    onClick={() => checkClientStatusAndSendMessages()}
                 >
                     <LuSendHorizonal />
                 </div>
             </div>
+
+            {showQrCode && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-5 rounded shadow-md">
+                        <h2 className="font-bold text-lg mb-4">QR Code per Connessione</h2>
+                        <img src={qrCodeUrl} alt="QR Code" className="mx-auto" />
+                        <button
+                            onClick={() => setShowQrCode(false)}
+                            className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        >
+                            Chiudi
+                        </button>
+                    </div>
+                </div>
+            )}
 
             {isFormOpen && (
                 <><div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
