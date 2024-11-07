@@ -1,36 +1,13 @@
 {
-  "Lunedi": [
-    {
-      "data": "02-11-2024",
-      "orario": "10:00",
-      "numero": "3892530814",
-      "nome": "Giacomo",
-      "cognome": "Di Fabrizio"
-    }
-  ],
-  "Martedi": [
-    {
-      "data": "03-11-2024",
-      "orario": "13:00",
-      "numero": "3892530814",
-      "nome": "Giacomo",
-      "cognome": "Di Fabrizio"
-    }
-  ],
+  "Lunedi": [],
+  "Martedi": [],
   "Domenica": [
     {
-      "data": "05-11-2024",
+      "data": "3-11-2024",
       "orario": "13:00",
       "numero": "3892530814",
       "nome": "Giacomo",
       "cognome": "Di Fabrizio"
-    },
-    {
-      "data": "04-11-2024",
-      "orario": "12:00",
-      "numero": "3337824905",
-      "nome": "Giorgia",
-      "cognome": "Traversi"
     }
   ]
 }

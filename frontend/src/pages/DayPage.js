@@ -5,12 +5,11 @@ import axios from 'axios';
 import { LuSendHorizonal } from "react-icons/lu";
 import swal from 'sweetalert';
 
-
 function DayPage() {
-    const { giorno } = useParams();
+    const { giorno, data } = useParams();
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [newUser, setNewUser] = useState({
-        data: '',
+        data: data || '',  // Pre-riempie il campo data con il valore della data nel link
         orario: '',
         numero: '',
         nome: '',
@@ -53,8 +52,7 @@ function DayPage() {
             const response = await axios.get(`http://localhost:5000/api/whatsapp/send-messages/${giorno}`);
             if (response.status === 200) {
                 swal("Ottimo!", `I messaggi di ${giorno} sono stati inviati con successo!`, "success");
-            }
-            if (response.status === 404) {
+            } else {
                 swal("Oops!", "Qualcosa è andato storto!", "error");
             }
         } catch (error) {

@@ -20,7 +20,7 @@ function App() {
         </Link>
         <Routes>
           <Route path='/' element={<HomePage />}></Route>
-          <Route path='/day/:giorno' element={<DayPage />}></Route>
+          <Route path='/day/:giorno/:data' element={<DayPage />}></Route>
           <Route path='/contacts' element={<ContactsPage />}></Route>
         </Routes>
       </BrowserRouter>
