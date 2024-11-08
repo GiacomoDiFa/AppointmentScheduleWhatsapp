@@ -6,7 +6,7 @@ import { LuSendHorizonal } from "react-icons/lu";
 import swal from 'sweetalert';
 
 function DayPage() {
-    const { giorno, data } = useParams();
+    const { data } = useParams();
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [showQrCode, setShowQrCode] = useState(false);
     const [qrCodeUrl, setQrCodeUrl] = useState('');
@@ -75,9 +75,9 @@ function DayPage() {
 
     const sendMessagesDay = async () => {
         try {
-            const response = await axios.get(`http://localhost:5000/api/whatsapp/send-messages/${giorno}`);
+            const response = await axios.get(`http://localhost:5000/api/whatsapp/send-messages/${data}`);
             if (response.status === 200) {
-                swal("Ottimo!", `I messaggi di ${giorno} sono stati inviati con successo!`, "success");
+                swal("Ottimo!", `I messaggi di ${data} sono stati inviati con successo!`, "success");
             } else {
                 swal("Oops!", "Qualcosa è andato storto!", "error");
             }
@@ -89,7 +89,7 @@ function DayPage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`http://localhost:5000/api/user/users/${giorno}`, newUser);
+            const response = await axios.post(`http://localhost:5000/api/user/users/${data}`, newUser);
             if (response.status === 201) {
                 window.location.reload();
             } else if (response.status === 400) {
@@ -105,7 +105,7 @@ function DayPage() {
 
     return (
         <div className='relative min-h-screen pb-16'>
-            <h1 className='font-bold text-3xl'>{giorno}</h1>
+            <h1 className='font-bold text-3xl'>{data}</h1>
             <Schedule />
             <div className='fixed bottom-4 right-4 flex'>
                 <div
@@ -148,7 +148,7 @@ function DayPage() {
                                 <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
                                     Data
                                 </label>
-                                <input value={newUser.data} name='data'
+                                <input value={newUser.data} name='data' disabled
                                     onChange={handleInputChange} required class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" type="text" placeholder="03-11-2024" />
                             </div>
                             <div class="w-full md:w-1/2 px-3">

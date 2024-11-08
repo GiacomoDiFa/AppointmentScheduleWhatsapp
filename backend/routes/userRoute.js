@@ -16,23 +16,21 @@ async function writeUsers(usersByDay) {
 
 // Middleware per validare i campi dell'utente
 function validateUserFields(req, res, next) {
-    const { nome, cognome, numero, data, orario } = req.body;
+    const { nome, cognome, numero, orario } = req.body;
     const { giorno } = req.params;
 
-    if (!nome || !cognome || !numero || !data ||!orario) {
+    if (!nome || !cognome || !numero ||!orario) {
       return res.status(400).json({ error: 'Tutti i campi (nome, cognome, numero, data, orario) sono obbligatori.' });
     }
-    if (!giorno || !["Lunedi", "Martedi", "Mercoledi", "Giovedi", "Venerdi", "Sabato", "Domenica"].includes(giorno)) {
-      return res.status(400).json({ error: 'Il giorno della settimana è obbligatorio e deve essere valido.' });
-    }
+  
     next();
 }
 
 // Ottenere tutti gli utenti di un giorno specifico
-router.get('/users/:giorno', async (req, res) => {
-  const { giorno } = req.params;
+router.get('/users/:data', async (req, res) => {
+  const { data } = req.params;
   const usersByDay = await readUsers();
-  res.json(usersByDay[giorno] || []);
+  res.json(usersByDay[data] || []);
 });
 
 // Aggiungere un nuovo utente per un giorno specifico usando il numero di numero come chiave
