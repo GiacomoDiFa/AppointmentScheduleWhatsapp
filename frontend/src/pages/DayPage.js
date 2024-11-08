@@ -44,7 +44,7 @@ function DayPage() {
                 ...newUser,
                 numero: selectedUser.numero,
                 nome: selectedUser.nome,
-                cognome: selectedUser.cognome,
+                cognome: selectedUser.cognome || ' ',
             });
         }
     };

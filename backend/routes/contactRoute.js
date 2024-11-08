@@ -64,7 +64,7 @@ router.post('/contacts-whatsapp', async (req, res) => {
     for (const contact of contacts.selectedContacts) {
         const nameParts = contact.name.split(' '); // Dividi il campo name in nome e cognome
         const nome = nameParts[0]; // Prendi il primo elemento come nome
-        const cognome = nameParts[1] || ''; // Se c'è un secondo elemento, è il cognome (se non esiste, sarà una stringa vuota)
+        const cognome = nameParts[1] || ' '; // Se c'è un secondo elemento, è il cognome (se non esiste, sarà una stringa vuota)
 
         // Crea un oggetto contatto
         const newContact = {
