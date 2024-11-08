@@ -6,14 +6,14 @@ import { CiClock1, CiTrash } from 'react-icons/ci';
 import { FaCalendarDay } from "react-icons/fa";
 
 function Schedule() {
-    const { giorno } = useParams();
+    const { data } = useParams();
     const [usersList, setUsersList] = useState([]);
 
     useEffect(() => {
         // Funzione per fare la richiesta GET
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/api/user/users/${giorno}`);
+                const response = await axios.get(`http://localhost:5000/api/user/users/${data}`);
                 setUsersList(response.data); // Salva i dati di risposta nello stato
             } catch (error) {
                 console.error("Errore durante il recupero dei dati:", error);
@@ -21,11 +21,11 @@ function Schedule() {
         };
 
         fetchData();
-    }, [giorno]);
+    }, [data]);
 
     async function handleDeleteuser(user) {
         try {
-            const response = await axios.delete(`http://localhost:5000/api/user/users/${giorno}/${user.nome}/${user.cognome}/${user.data}/${user.orario}`);
+            const response = await axios.delete(`http://localhost:5000/api/user/users/${data}/${user.nome}/${user.cognome}/${user.data}/${user.orario}`);
             if (response.status === 204) {
                 window.location.reload()
             }
@@ -38,7 +38,7 @@ function Schedule() {
     return (
         <>
             {usersList
-                .sort((a, b) => a.data.localeCompare(b.data)) // Ordina per orario come stringhe
+                .sort((a, b) => a.orario.localeCompare(b.orario)) // Ordina per orario come stringhe
                 .map(user => (
                     <div key={user.numero} className='flex w-full items-center border-b border-gray-200 mt-1'>
                         <div className=''>

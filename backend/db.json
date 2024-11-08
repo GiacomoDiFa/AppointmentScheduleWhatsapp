@@ -1,28 +1,4 @@
 {
-  "Lunedi": [
-    {
-      "data": "4-11-2024",
-      "orario": "13:00",
-      "numero": "393313376465",
-      "nome": "Babbo",
-      "cognome": " "
-    }
-  ],
-  "Martedi": [],
-  "Domenica": [
-    {
-      "data": "3-11-2024",
-      "orario": "12:00",
-      "numero": "393313376465",
-      "nome": "Babbo",
-      "cognome": " "
-    },
-    {
-      "data": "3-11-2024",
-      "orario": "13:00",
-      "numero": "393313376465",
-      "nome": "Babbo",
-      "cognome": " "
-    }
-  ]
+  "8-11-2024": [],
+  "9-11-2024": []
 }
