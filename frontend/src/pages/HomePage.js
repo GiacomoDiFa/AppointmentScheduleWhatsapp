@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Calendar from '../components/Calendar';
 import { RiContactsBook3Fill } from "react-icons/ri";
 import { Link } from 'react-router-dom';
+import Calendar2 from '../components/Calendar2';
 
 function HomePage() {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -27,13 +28,16 @@ function HomePage() {
   return (
     <div className='relative'>
       <div className='h-screen w-screen items-center'>
+        <Calendar2/>
+        <div className='flex items-center justify-center'>
         <label className='block text-lg mb-2'>Seleziona una data:</label>
         <input 
           type="date" 
           value={selectedDate.toISOString().split('T')[0]} 
           onChange={handleDateChange} 
-          className='p-2 border rounded mb-4'
+          className='p-2 border rounded mb-4 ml-2'
         />
+        </div>
         <Calendar days={daysOfWeek} />
         <div className='fixed bottom-4 right-4 flex'>
           <Link to='/contacts'>
