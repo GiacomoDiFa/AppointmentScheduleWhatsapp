@@ -1,9 +1,8 @@
-import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
 import HomePage from './pages/HomePage';
 import DayPage from './pages/DayPage';
 import ContactsPage from './pages/ContactsPage';
-import {  CiCalendarDate } from "react-icons/ci";
 
 
 function App() {
