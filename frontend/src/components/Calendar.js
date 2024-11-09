@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { addDays, startOfMonth, endOfMonth, startOfWeek, endOfWeek, format } from 'date-fns';
 import { Link } from 'react-router-dom';
+import {it} from 'date-fns/locale'
 import { TfiAgenda } from "react-icons/tfi";
 
 function Calendar() {
@@ -38,7 +39,7 @@ function Calendar() {
                 <div className='flex justify-center items-center w-full'>
                     <button onClick={prevMonth} className="px-10 py-2 bg-gray-200 rounded mr-10">←</button>
                     <h2 className="text-2xl font-mono">
-                        {format(currentDate, 'MMMM yyyy')}
+                        {format(currentDate, 'MMMM yyyy',{locale:it}).charAt(0).toUpperCase()+format(currentDate, 'MMMM yyyy',{locale:it}).slice(1)}
                     </h2>
                     <button onClick={nextMonth} className="px-10 py-2 bg-gray-200 rounded ml-10">→</button>
                 </div>
