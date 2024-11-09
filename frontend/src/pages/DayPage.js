@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import Schedule from '../components/Schedule';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { LuSendHorizonal } from "react-icons/lu";
 import swal from 'sweetalert';
+import { TfiAgenda } from 'react-icons/tfi';
 
 function DayPage() {
     const { data } = useParams();
@@ -104,8 +105,22 @@ function DayPage() {
     };
 
     return (
-        <div className='relative min-h-screen pb-16'>
-            <h1 className='font-bold text-3xl'>{data}</h1>
+        <div className='relative min-h-screen pb-16 p-4 max-w h-[100vh] mx-auto'>
+
+            <div className='flex justify-center items-center border-b py-8 '>
+                <Link to='/'>
+                <div className='mr-auto flex items-center'>
+                    <div className='mr-2'><TfiAgenda size={30}/></div>
+                    <div className='font-mono text-gray-500 text-2xl ml-2'>Agenda</div>
+                </div>
+                </Link>
+                <div className='flex justify-center items-center w-full'>
+                <h1 className='font-mono text-2xl'>{data}</h1>
+                </div>
+            </div>
+            
+            
+          
             <Schedule />
             <div className='fixed bottom-4 right-4 flex'>
                 <div

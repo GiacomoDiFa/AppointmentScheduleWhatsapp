@@ -4,6 +4,8 @@ import { GoPerson } from 'react-icons/go';
 import { CiTrash } from 'react-icons/ci';
 import { BsTelephone } from "react-icons/bs";
 import { FaArrowLeft } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import { TfiAgenda } from 'react-icons/tfi';
 
 function ContactsPage() {
     const [isFormOpen, setIsFormOpen] = useState(false);
@@ -109,16 +111,16 @@ function ContactsPage() {
         fetchData();
     }, []);
 
-    const handleSaveWhatsAppContacts = async () =>{
+    const handleSaveWhatsAppContacts = async () => {
 
-        try{
-            const response = await axios.post(`http://localhost:5000/api/contact/contacts-whatsapp`,{
+        try {
+            const response = await axios.post(`http://localhost:5000/api/contact/contacts-whatsapp`, {
                 selectedContacts
             })
-            if(response.status===201){
+            if (response.status === 201) {
                 window.location.reload()
             }
-        }catch(error){
+        } catch (error) {
             console.error(error)
         }
     }
@@ -138,16 +140,27 @@ function ContactsPage() {
     };
 
     return (
-        <div className='relative min-h-screen pb-16'>
+        <div className='relative min-h-screen pb-16 p-4 max-w h-[100vh] mx-auto'>
 
 
             {isLoading ? (
                 <p>Caricamento...</p>
             ) : (
                 <>
-                    <div className='flex'>
+                    <div className='flex justify-center items-center border-b py-8 '>
+                        <Link to='/'>
+                            <div className='mr-auto flex items-center'>
+                                <div className='mr-2'><TfiAgenda size={30} /></div>
+                                <div className='font-mono text-gray-500 text-2xl ml-2'>Agenda</div>
+                            </div>
+                        </Link>
+                        <div className='flex justify-center items-center w-full'>
+                            <h1 className='font-mono text-2xl'>Contatti</h1>
+                        </div>
+                    </div>
+                    <div className='flex mt-10'>
                         <div className='w-[45%]'>
-                            <h1 className='text-center font-bold text-3xl'>I miei contatti</h1>
+                            <h1 className='text-center font-mono text-2xl'>I miei contatti in Agenda</h1>
                             <div className='bg--300'>
                                 {usersList.map(user => (
                                     <div key={user.numero} className='flex w-full items-center border-b border-gray-200 mt-1'>
@@ -175,7 +188,7 @@ function ContactsPage() {
                             </div>
                         </div>
                         <div className='w-[45%] ml-auto'>
-                            <h1 className='text-center font-bold text-3xl'>I miei contatti WhatsApp</h1>
+                            <h1 className='text-center font-mono text-2xl'>I miei contatti WhatsApp</h1>
                             <div className='bg--300'>
                                 <div className='bg--300'>
                                     {showQrCode && qrCodeUrl ? (

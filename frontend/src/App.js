@@ -10,14 +10,6 @@ function App() {
   return (
     <div className='App'>
       <BrowserRouter basename='/Calendar'>
-        <Link to='/'>
-          <div className='flex items-center justify-center gap-x-2'>
-            <CiCalendarDate size={70} />
-            <h1 className="mt-2 text-4xl text-center font-bold">
-              My Agenda
-            </h1>
-          </div>
-        </Link>
         <Routes>
           <Route path='/' element={<HomePage />}></Route>
           <Route path='/day/:data/' element={<DayPage />}></Route>
