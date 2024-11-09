@@ -1,28 +1,13 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {  GoPerson } from "react-icons/go";
 import { CiClock1, CiTrash } from 'react-icons/ci';
 import { FaCalendarDay } from "react-icons/fa";
 
-function Schedule() {
+function Schedule({patientsList}) {
     const { data } = useParams();
-    const [usersList, setUsersList] = useState([]);
 
-    useEffect(() => {
-        // Funzione per fare la richiesta GET
-        const fetchData = async () => {
-            try {
-                const response = await axios.get(`http://localhost:5000/api/user/users/${data}`);
-                setUsersList(response.data); // Salva i dati di risposta nello stato
-            } catch (error) {
-                console.error("Errore durante il recupero dei dati:", error);
-            }
-        };
-
-        fetchData();
-    }, [data]);
-
+    
     async function handleDeleteuser(user) {
         try {
             const response = await axios.delete(`http://localhost:5000/api/user/users/${data}/${user.nome}/${user.cognome}/${user.data}/${user.orario}`);
@@ -37,7 +22,7 @@ function Schedule() {
 
     return (
         <>
-            {usersList
+            {patientsList
                 .sort((a, b) => a.orario.localeCompare(b.orario)) // Ordina per orario come stringhe
                 .map(user => (
                     <div key={user.numero} className='flex w-full items-center border-b border-gray-200 mt-1'>

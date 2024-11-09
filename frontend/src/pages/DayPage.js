@@ -12,26 +12,29 @@ function DayPage() {
     const [showQrCode, setShowQrCode] = useState(false);
     const [qrCodeUrl, setQrCodeUrl] = useState('');
     const [newUser, setNewUser] = useState({
-        data: data || '',  
+        data: data || '',
         orario: '',
         numero: '',
         nome: '',
         cognome: '',
     });
     const [usersList, setUsersList] = useState([]);
+    const [patientsList, setPatientsList] = useState([])
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await axios.get(`http://localhost:5000/api/contact/contact/`);
                 setUsersList(response.data);
+                const response2 = await axios.get(`http://localhost:5000/api/user/users/${data}`);
+                setPatientsList(response2.data)
             } catch (error) {
                 console.error("Errore durante il recupero dei dati:", error);
             }
         };
 
         fetchData();
-    }, []);
+    }, [data]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -109,19 +112,19 @@ function DayPage() {
 
             <div className='flex justify-center items-center border-b py-8 '>
                 <Link to='/'>
-                <div className='mr-auto flex items-center'>
-                    <div className='mr-2'><TfiAgenda size={30}/></div>
-                    <div className='font-mono text-gray-500 text-2xl ml-2'>Agenda</div>
-                </div>
+                    <div className='mr-auto flex items-center'>
+                        <div className='mr-2'><TfiAgenda size={30} /></div>
+                        <div className='font-mono text-gray-500 text-2xl ml-2'>Agenda</div>
+                    </div>
                 </Link>
                 <div className='flex justify-center items-center w-full'>
-                <h1 className='font-mono text-2xl'>{data}</h1>
+                    <h1 className='font-mono text-2xl'>{data}</h1>
                 </div>
             </div>
-            
-            
-          
-            <Schedule />
+
+
+
+            <Schedule patientsList={patientsList} />
             <div className='fixed bottom-4 right-4 flex'>
                 <div
                     className='rounded-full w-20 h-20 bg-blue-600 flex justify-center items-center text-white cursor-pointer text-3xl hover:bg-blue-700 transition-transform transform hover:scale-105'
@@ -132,8 +135,9 @@ function DayPage() {
             </div>
             <div className='fixed bottom-4 right-28 flex'>
                 <div
-                    className='rounded-full w-20 h-20 bg-blue-600 flex justify-center items-center text-white cursor-pointer text-3xl hover:bg-blue-700 transition-transform transform hover:scale-105'
+                    className={patientsList.length === 0 ? 'pointer-events-none opacity-40 rounded-full w-20 h-20 bg-blue-600 flex justify-center items-center text-white cursor-pointer text-3xl hover:bg-blue-700 transition-transform transform hover:scale-105' : 'rounded-full w-20 h-20 bg-blue-600 flex justify-center items-center text-white cursor-pointer text-3xl hover:bg-blue-700 transition-transform transform hover:scale-105'}
                     onClick={() => checkClientStatusAndSendMessages()}
+
                 >
                     <LuSendHorizonal />
                 </div>
