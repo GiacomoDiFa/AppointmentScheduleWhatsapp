@@ -50,26 +50,6 @@ router.post('/users/:giorno', validateUserFields, async (req, res) => {
   res.status(201).json(newUser);
 });
 
-// Modificare un utente per un giorno specifico tramite il numero di numero
-//router.put('/users/:giorno/:numero', validateUserFields, async (req, res) => {
-  //const { giorno, numero } = req.params;
-  //const updateData = req.body;
-  //const usersByDay = await readUsers();
-
-  //if (!usersByDay[giorno]) {
-    //return res.status(404).json({ error: 'Nessun utente trovato per questo giorno' });
-  //}
-
-  //const userIndex = usersByDay[giorno].findIndex(user => user.numero === numero);
-  //if (userIndex === -1) {
-    //return res.status(404).json({ error: 'Utente non trovato' });
-  //}
-
-  //usersByDay[giorno][userIndex] = { ...usersByDay[giorno][userIndex], ...updateData };
-  //await writeUsers(usersByDay);
-
-  //res.json(usersByDay[giorno][userIndex]);
-//});
 
 // Eliminare un utente per un giorno specifico tramite il numero di numero
 router.delete('/users/:giorno/:nome/:cognome/:data/:orario', async (req, res) => {

@@ -3,10 +3,12 @@ import './App.css';
 import HomePage from './pages/HomePage';
 import DayPage from './pages/DayPage';
 import ContactsPage from './pages/ContactsPage';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
-
+const queryClient = new QueryClient()
 function App() {
   return (
+    <QueryClientProvider client={queryClient}>
     <div className='App'>
       <BrowserRouter basename='/Calendar'>
         <Routes>
@@ -15,8 +17,8 @@ function App() {
           <Route path='/contacts' element={<ContactsPage />}></Route>
         </Routes>
       </BrowserRouter>
-
     </div>
+    </QueryClientProvider>
   );
 }
 
