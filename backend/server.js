@@ -29,7 +29,6 @@ client.on('qr', async qr => {
 client.on('ready', async () => {
     console.log('Client is ready!');
     isClientReady = true;
-    const contacts = await client.getContacts()
 
 
 });

@@ -1,37 +1,49 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { FaArrowLeft } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { TfiAgenda } from 'react-icons/tfi';
 import Button from '../components/Button';
 import Form from '../components/Form';
 import UserItem from '../components/UserItem';
-import axios from 'axios';
 import { useGetContact } from '../hooks/contact/useGetContact';
 import { usePostContact } from '../hooks/contact/usePostContact';
 import { usePostSelectedContactsWhatsappToApplication } from '../hooks/contact/usePostSelectedContactsWhatsappToApplication';
 import { useDeleteContact } from '../hooks/contact/useDeleteContact';
+import { useGetWhatsappContact } from '../hooks/whatsapp/useGetWhatsappContact';
+import { useGetQrCode } from '../hooks/whatsapp/useGetQrCode';
+import { useGetClientStatus } from '../hooks/whatsapp/useGetClientStatus';
 
 function ContactsPage() {
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [newUser, setNewUser] = useState({ nome: '', cognome: '', numero: '' });
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedContacts, setSelectedContacts] = useState([]);
-    const [showQrCode, setShowQrCode] = useState(false);
-    const [qrCodeUrl, setQrCodeUrl] = useState('');
 
+    // Use hooks with useQuery
     const { data: contactsList, isLoading: isLoadingContacts } = useGetContact();
     const { addContact } = usePostContact();
-    const { WhatsAppToApplication } = usePostSelectedContactsWhatsappToApplication()
-    const { deleteContactFn } = useDeleteContact()
+    const { WhatsAppToApplication } = usePostSelectedContactsWhatsappToApplication();
+    const { deleteContactFn } = useDeleteContact();
+    const { data: whatsappContacts, isLoading: isLoadingWhatsappContacts } = useGetWhatsappContact();
+    console.log(whatsappContacts)
+    const { data: qrCode, isLoading: isLoadingQrCode } = useGetQrCode();
+    const { data: clientStatus } = useGetClientStatus();
+    // console.log(qrCode)
+    // console.log(clientStatus)
+
+    // per ora lasciamo cosi ma e' buggata ma voglio trovare qual e il motivo perche sarebbe figo
+    // useEffect(() => {
+    //     queryClient.invalidateQueries('client-status')
+    //     queryClient.invalidateQueries('whatsapp-contacts')
+    // }, [clientStatus])
 
 
-    const [whatsappContacts, setWhatsappContacts] = useState([]);
-    // const [isLoadingContacts, setIsLoadingContacts] = useState(false);
-
-    const filteredContacts = whatsappContacts.filter(contact =>
+    // Filter contacts based on search term
+    const filteredContacts = whatsappContacts?.data?.filter(contact =>
         contact.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    // Toggle contact selection
     const toggleContactSelection = (contact) => {
         setSelectedContacts(prevSelected =>
             prevSelected.includes(contact)
@@ -40,11 +52,13 @@ function ContactsPage() {
         );
     };
 
+    // Handle form input change
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setNewUser((prev) => ({ ...prev, [name]: value }));
     };
 
+    // Handle contact submission
     const handleSubmit = (e) => {
         e.preventDefault();
         addContact(newUser, {
@@ -55,53 +69,19 @@ function ContactsPage() {
         });
     };
 
-    const fetchQrCode = async () => {
-        try {
-            const response = await axios.get('http://localhost:5000/qr');
-            setQrCodeUrl(response.data);
-            setShowQrCode(true);
-        } catch (error) {
-            console.error("Errore durante il recupero del QR code:", error);
-        }
-    };
-
-    useEffect(() => {
-        const fetchContacts = async () => {
-            try {
-                // setIsLoadingContacts(true);
-                const response = await axios.get('http://localhost:5000/client-contacts');
-                setWhatsappContacts(response.data);
-                setShowQrCode(false);
-            } catch (error) {
-                if (error.response && error.response.status === 404) {
-                    fetchQrCode();
-                } else {
-                    console.error("Errore durante il recupero dei contatti WhatsApp:", error);
-                }
-            } finally {
-                // setIsLoadingContacts(false);
-            }
-        };
-        fetchContacts();
-    }, []);
-
-    const handleSaveWhatsAppContacts = async () => {
+    // Handle saving selected WhatsApp contacts
+    const handleSaveWhatsAppContacts = () => {
         WhatsAppToApplication(selectedContacts, {
-            onSuccess: () => {
-                setSelectedContacts([])
-            },
-            onError: (error) => {
-                console.error(error)
-            }
-        })
+            onSuccess: () => setSelectedContacts([]),
+            onError: (error) => console.error(error)
+        });
     };
 
-    const handleDeleteUser = async (user) => {
+    // Handle contact deletion
+    const handleDeleteUser = (user) => {
         deleteContactFn(user.numero, {
-            onError: (error) => {
-                console.error(error)
-            }
-        })
+            onError: (error) => console.error(error)
+        });
     };
 
     return (
@@ -113,19 +93,17 @@ function ContactsPage() {
                     <div className='flex justify-center items-center border-b py-8 '>
                         <Link to='/'>
                             <div className='mr-auto flex items-center'>
-                                <div className='mr-2'><TfiAgenda size={30} /></div>
-                                <div className='font-mono text-gray-500 text-2xl ml-2'>Agenda</div>
+                                <TfiAgenda size={30} className='mr-2' />
+                                <span className='font-mono text-gray-500 text-2xl ml-2'>Agenda</span>
                             </div>
                         </Link>
-                        <div className='flex justify-center items-center w-full'>
-                            <h1 className='font-mono text-2xl'>Contatti</h1>
-                        </div>
+                        <h1 className='font-mono text-2xl w-full text-center'>Contatti</h1>
                     </div>
                     <div className='flex mt-10'>
                         <div className='w-[45%]'>
                             <h1 className='text-center font-mono text-2xl'>I miei contatti in Agenda</h1>
                             <div className='bg--300'>
-                                {contactsList.data?.map(user => (
+                                {contactsList?.data?.map(user => (
                                     <UserItem
                                         key={user.numero}
                                         handleDeleteUser={handleDeleteUser}
@@ -138,11 +116,12 @@ function ContactsPage() {
                         <div className='w-[45%] ml-auto'>
                             <h1 className='text-center font-mono text-2xl'>I miei contatti WhatsApp</h1>
                             <div className='bg--300'>
-                                {showQrCode && qrCodeUrl ? (
+
+                                {clientStatus?.data?.ready === false && qrCode ? (
                                     <div>
-                                        <img src={qrCodeUrl} alt="QR Code" className="mx-auto" />
+                                        <img src={qrCode.data} alt="QR Code" className="mx-auto" />
                                     </div>
-                                ) : isLoadingContacts ? (
+                                ) : isLoadingWhatsappContacts || isLoadingQrCode ? (
                                     <p>Caricamento...</p>
                                 ) : (
                                     <div className="p-4">
@@ -154,7 +133,7 @@ function ContactsPage() {
                                             onChange={(e) => setSearchTerm(e.target.value)}
                                         />
                                         <div className="overflow-y-auto max-h-64">
-                                            {filteredContacts.map((contact, index) => (
+                                            {filteredContacts?.map((contact, index) => (
                                                 <div key={index} className="flex items-center py-2 border-b">
                                                     <input
                                                         type="checkbox"
@@ -162,12 +141,12 @@ function ContactsPage() {
                                                         onChange={() => toggleContactSelection(contact)}
                                                         className="mr-2"
                                                     />
-                                                    <div
+                                                    <span
                                                         className="cursor-pointer flex-1"
                                                         onClick={() => toggleContactSelection(contact)}
                                                     >
                                                         {contact.name}
-                                                    </div>
+                                                    </span>
                                                 </div>
                                             ))}
                                         </div>
@@ -178,6 +157,8 @@ function ContactsPage() {
                                         />
                                     </div>
                                 )}
+
+
                             </div>
                         </div>
                     </div>

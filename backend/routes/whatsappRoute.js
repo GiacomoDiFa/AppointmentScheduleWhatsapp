@@ -11,7 +11,7 @@ async function readUsers() {
 
 // Funzione per definire le route con il client come argomento
 module.exports = function(client) {
-    router.get('/send-messages/:giorno', async (req, res) => {
+    router.post('/send-messages/:giorno', async (req, res) => {
         const { giorno } = req.params;
         const usersByDay = await readUsers();
 
