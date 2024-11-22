@@ -12,6 +12,7 @@ import { usePostUser } from '../hooks/user/usePostUser';
 import { usePostSendMessages } from '../hooks/whatsapp/usePostSendMessages';
 import { useGetQrCode } from '../hooks/whatsapp/useGetQrCode';
 import { useGetClientStatus } from '../hooks/whatsapp/useGetClientStatus';
+import Navbar from '../components/Navbar';
 
 function DayPage() {
     const { data } = useParams();
@@ -80,18 +81,7 @@ function DayPage() {
 
     return (
         <div className='relative min-h-screen pb-16 p-4 max-w h-[100vh] mx-auto'>
-            <div className='flex justify-center items-center border-b py-8 '>
-                <Link to='/'>
-                    <div className='mr-auto flex items-center'>
-                        <div className='mr-2'><TfiAgenda size={30} /></div>
-                        <div className='font-mono text-gray-500 text-2xl ml-2'>Agenda</div>
-                    </div>
-                </Link>
-                <div className='flex justify-center items-center w-full'>
-                    <h1 className='font-mono text-2xl'>{data}</h1>
-                </div>
-            </div>
-
+            <Navbar text={data}/>
             {isLoadingUsers ? (
                 <p>Caricamento utenti...</p>
             ) : (

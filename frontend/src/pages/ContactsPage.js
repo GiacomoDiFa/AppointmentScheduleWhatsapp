@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaArrowLeft } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
-import { TfiAgenda } from 'react-icons/tfi';
 import Button from '../components/Button';
 import Form from '../components/Form';
 import UserItem from '../components/UserItem';
@@ -12,12 +10,17 @@ import { useDeleteContact } from '../hooks/contact/useDeleteContact';
 import { useGetWhatsappContact } from '../hooks/whatsapp/useGetWhatsappContact';
 import { useGetQrCode } from '../hooks/whatsapp/useGetQrCode';
 import { useGetClientStatus } from '../hooks/whatsapp/useGetClientStatus';
+import Navbar from '../components/Navbar';
+import { useQueryClient } from 'react-query';
 
 function ContactsPage() {
+    const queryClient = useQueryClient()
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [newUser, setNewUser] = useState({ nome: '', cognome: '', numero: '' });
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedContacts, setSelectedContacts] = useState([]);
+    const [prevClientStatus, setPrevClientStatus] = useState()
+    console.log(prevClientStatus)
 
     // Use hooks with useQuery
     const { data: contactsList, isLoading: isLoadingContacts } = useGetContact();
@@ -25,17 +28,22 @@ function ContactsPage() {
     const { WhatsAppToApplication } = usePostSelectedContactsWhatsappToApplication();
     const { deleteContactFn } = useDeleteContact();
     const { data: whatsappContacts, isLoading: isLoadingWhatsappContacts } = useGetWhatsappContact();
-    console.log(whatsappContacts)
     const { data: qrCode, isLoading: isLoadingQrCode } = useGetQrCode();
     const { data: clientStatus } = useGetClientStatus();
     // console.log(qrCode)
     // console.log(clientStatus)
 
-    // per ora lasciamo cosi ma e' buggata ma voglio trovare qual e il motivo perche sarebbe figo
-    // useEffect(() => {
-    //     queryClient.invalidateQueries('client-status')
-    //     queryClient.invalidateQueries('whatsapp-contacts')
-    // }, [clientStatus])
+    useEffect(() => {
+        if (clientStatus?.data?.ready === true && prevClientStatus === undefined) {
+            setPrevClientStatus(true)
+            queryClient.invalidateQueries('client-status');
+            queryClient.invalidateQueries('whatsapp-contacts');
+        } else if (clientStatus?.data?.ready === false) {
+            setPrevClientStatus(undefined)
+            queryClient.invalidateQueries('client-status');
+            queryClient.invalidateQueries('whatsapp-contacts');
+        }
+    }, [clientStatus, queryClient]);
 
 
     // Filter contacts based on search term
@@ -72,16 +80,13 @@ function ContactsPage() {
     // Handle saving selected WhatsApp contacts
     const handleSaveWhatsAppContacts = () => {
         WhatsAppToApplication(selectedContacts, {
-            onSuccess: () => setSelectedContacts([]),
-            onError: (error) => console.error(error)
+            onSuccess: () => setSelectedContacts([])
         });
     };
 
     // Handle contact deletion
     const handleDeleteUser = (user) => {
-        deleteContactFn(user.numero, {
-            onError: (error) => console.error(error)
-        });
+        deleteContactFn(user.numero);
     };
 
     return (
@@ -90,15 +95,7 @@ function ContactsPage() {
                 <p>Caricamento...</p>
             ) : (
                 <>
-                    <div className='flex justify-center items-center border-b py-8 '>
-                        <Link to='/'>
-                            <div className='mr-auto flex items-center'>
-                                <TfiAgenda size={30} className='mr-2' />
-                                <span className='font-mono text-gray-500 text-2xl ml-2'>Agenda</span>
-                            </div>
-                        </Link>
-                        <h1 className='font-mono text-2xl w-full text-center'>Contatti</h1>
-                    </div>
+                    <Navbar text={'Contatti'} />
                     <div className='flex mt-10'>
                         <div className='w-[45%]'>
                             <h1 className='text-center font-mono text-2xl'>I miei contatti in Agenda</h1>

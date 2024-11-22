@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { addDays, startOfMonth, endOfMonth, startOfWeek, endOfWeek, format } from 'date-fns';
 import { Link } from 'react-router-dom';
-import {it} from 'date-fns/locale'
-import { TfiAgenda } from "react-icons/tfi";
+import Navbar from './Navbar';
 
 function Calendar() {
     const [currentDate, setCurrentDate] = useState(new Date());
@@ -29,21 +28,7 @@ function Calendar() {
 
     return (
         <div className="p-4 max-w h-[100vh] mx-auto">
-            <div className='flex justify-center items-center border-b py-8 '>
-                <Link to='/'>
-                <div className='mr-auto flex items-center'>
-                    <div className='mr-2'><TfiAgenda size={30}/></div>
-                    <div className='font-mono text-gray-500 text-2xl ml-2'>Agenda</div>
-                </div>
-                </Link>
-                <div className='flex justify-center items-center w-full'>
-                    <button onClick={prevMonth} className="px-10 py-2 bg-gray-200 rounded mr-10">←</button>
-                    <h2 className="text-2xl font-mono">
-                        {format(currentDate, 'MMMM yyyy',{locale:it}).charAt(0).toUpperCase()+format(currentDate, 'MMMM yyyy',{locale:it}).slice(1)}
-                    </h2>
-                    <button onClick={nextMonth} className="px-10 py-2 bg-gray-200 rounded ml-10">→</button>
-                </div>
-            </div>
+            <Navbar currentDate={currentDate} nextMonth={nextMonth} prevMonth={prevMonth} />
             <div className="grid grid-cols-7 text-center font-bold">
                 {['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'].map(day => (
                     <div key={day} className="p-2">{day}</div>
