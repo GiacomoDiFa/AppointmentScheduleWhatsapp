@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import Schedule from '../components/Schedule';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { LuSendHorizonal } from "react-icons/lu";
 import swal from 'sweetalert';
-import { TfiAgenda } from 'react-icons/tfi';
 import Button from '../components/Button';
-import Form from '../components/Form';
 import { useGetContact } from '../hooks/contact/useGetContact';
 import { useGetUser } from '../hooks/user/useGetUser';
 import { usePostUser } from '../hooks/user/usePostUser';
@@ -13,6 +11,7 @@ import { usePostSendMessages } from '../hooks/whatsapp/usePostSendMessages';
 import { useGetQrCode } from '../hooks/whatsapp/useGetQrCode';
 import { useGetClientStatus } from '../hooks/whatsapp/useGetClientStatus';
 import Navbar from '../components/Navbar';
+import FormReact from '../components/FormReact';
 
 function DayPage() {
     const { data } = useParams();
@@ -81,7 +80,7 @@ function DayPage() {
 
     return (
         <div className='relative min-h-screen pb-16 p-4 max-w h-[100vh] mx-auto'>
-            <Navbar text={data}/>
+            <Navbar text={data} />
             {isLoadingUsers ? (
                 <p>Caricamento utenti...</p>
             ) : (
@@ -112,7 +111,7 @@ function DayPage() {
                 </div>
             )}
 
-            <Form
+            <FormReact
                 isFormOpen={isFormOpen}
                 title={'Aggiungi utente'}
                 formData={newUser}

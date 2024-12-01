@@ -30,8 +30,6 @@ function ContactsPage() {
     const { data: whatsappContacts, isLoading: isLoadingWhatsappContacts } = useGetWhatsappContact();
     const { data: qrCode, isLoading: isLoadingQrCode } = useGetQrCode();
     const { data: clientStatus } = useGetClientStatus();
-    // console.log(qrCode)
-    // console.log(clientStatus)
 
     useEffect(() => {
         if (clientStatus?.data?.ready === true && prevClientStatus === undefined) {
